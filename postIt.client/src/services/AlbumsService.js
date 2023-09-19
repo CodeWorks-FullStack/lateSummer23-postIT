@@ -1,5 +1,6 @@
 import { AppState } from "../AppState.js"
 import { Album } from "../models/Album.js"
+import { Collaborator } from "../models/Collborator.js"
 import { Picture } from "../models/Picture.js"
 import { logger } from "../utils/Logger.js"
 import { api } from "./AxiosService.js"
@@ -18,8 +19,10 @@ async createAlbum(albumData){
   const res = await api.post('api/albums', albumData)
   logger.log('📷 created album', res.data)
   // NOTE unshift adds the newest item to the start and push to the end (for best use case, consider how your server data is returned)
-  AppState.albums.unshift(new Album(res.data))
+  const newAlbum = new Album(res.data)
+  AppState.albums.unshift(newAlbum)
   // AppState.albums.push(new Album(res.data))
+  return newAlbum // this is returned so the vue component has it for a router push
 }
 
 async getAlbumById(albumId){
@@ -31,6 +34,11 @@ async getPicturesByAlbumId(albumId){
   const res = await api.get(`api/albums/${albumId}/pictures`)
   logger.log('🖼️ album pictures', res.data)
   AppState.activeAlbumPictures = res.data.map(pic => new Picture(pic))
+}
+async getCollaboratorsByAlbumId(albumId){
+  const res = await api.get(`api/albums/${albumId}/collaborators`)
+  logger.log('📷🤝', res.data)
+  AppState.activeAlbumCollaborators = res.data.map(collab => new Collaborator(collab))
 }
 }
 

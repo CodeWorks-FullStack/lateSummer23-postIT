@@ -1,6 +1,13 @@
 <template>
   <div class="container">
 
+    <section class="row">
+      <!-- {{ myCollaborations }} -->
+      <div v-for="collab in myCollaborations" :key="collab.id" class="col-6 col-md-2">
+        <AlbumCard :album="collab.album"/>
+      </div>
+    </section>
+
     <!-- STUB filter bar -->
     <section class="row bg-info gap-2 p-2 rounded my-2">
       <!-- NOTE changing the ref value here recomputes the album computed -->
@@ -27,16 +34,19 @@
 </template>
 
 <script>
-import { computed, onMounted, ref } from 'vue';
+import { computed, nextTick, onMounted, ref } from 'vue';
 import Pop from '../utils/Pop.js';
 import { albumsService} from '../services/AlbumsService.js'
 import {AppState} from '../AppState.js'
 import AlbumCard from '../components/AlbumCard.vue';
+import { accountService } from '../services/AccountService.js';
 
 export default {
     setup() {
         onMounted(() => {
             getAlbums();
+            // FIXME DO NOT GET THE ACCOUNTS INFO ON LOAD OF A PAGE
+            // getMyCollaborations()
         });
         const filterBy = ref('')
         async function getAlbums() {
@@ -47,6 +57,14 @@ export default {
                 Pop.error(error);
             }
         }
+        // async function getMyCollaborations(){
+        //   try {
+        //     await accountService.getMyCollaborations()
+
+        //   } catch (error) {
+        //     Pop.error(error)
+        //   }
+        // }
         return {
           filterBy,
             albums: computed(() => {
@@ -56,7 +74,8 @@ export default {
               } else {
                 return AppState.albums.filter(album => album.category == filterBy.value)
               }
-            })
+            }),
+            myCollaborations: computed(()=> AppState.myCollaborations)
         };
     },
     components: { AlbumCard }

@@ -6,6 +6,7 @@
       <img :src="album.coverImg" alt="">
       <div>
         <p class="text-center fw-bold">{{ album.title }}</p>
+        <p class="text-center">{{ album.memberCount }}<i class="mdi mdi-heart"></i></p>
       </div>
     </div>
   </router-link>
@@ -17,7 +18,8 @@ import { AppState } from '../AppState';
 import { computed, reactive, onMounted } from 'vue';
 import { Album } from '../models/Album.js';
 export default {
-  props: {album: {type: Album, required: true}},
+  // NOTE this gives us flexibility on our prop, to avoid cascading class constructor issues.
+  props: {album: {type: Album || Object, required: true}},
   setup(){
   return {  }
   }

@@ -38,9 +38,11 @@ import { computed, reactive, onMounted, ref } from 'vue';
 import Pop from '../utils/Pop.js';
 import { albumsService } from '../services/AlbumsService.js';
 import { Modal } from 'bootstrap';
+import { useRouter } from 'vue-router';
 export default {
   setup(){
     const albumData = ref({})
+    const router = useRouter()
     function resetForm(){
       albumData.value = {category: ''}
     }
@@ -51,10 +53,12 @@ export default {
     albumData,
     async createAlbum(){
       try {
-        await albumsService.createAlbum(albumData.value) // sends form data to service to create
+        // NOTE getting the new Album back from a return in the service layer
+        let newAlbum = await albumsService.createAlbum(albumData.value) // sends form data to service to create
         Pop.toast('Album Created', 'success') // tells the user good job
         resetForm() // resets the form
         Modal.getOrCreateInstance('#create-album').hide() // closes the modal
+        router.push({name: 'Album Details', params: {albumId: newAlbum.id}})
       } catch (error) {
         Pop.error(error)
       }

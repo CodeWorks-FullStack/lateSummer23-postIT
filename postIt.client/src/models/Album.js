@@ -11,5 +11,7 @@ export class Album{
     this.updatedAt = data.updatedAt
     this.creatorId = data.creatorId
     this.creator = data.creator
+    this.memberCount = data.memberCount
+    this.isAlbum = 'this is a classed album'
   }
 }

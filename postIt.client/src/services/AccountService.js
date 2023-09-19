@@ -1,6 +1,8 @@
 import { AppState } from '../AppState'
 import { Account } from '../models/Account.js'
+import { Collaborator } from '../models/Collborator.js'
 import { logger } from '../utils/Logger'
+import Pop from '../utils/Pop.js'
 import { api } from './AxiosService'
 
 class AccountService {
@@ -10,6 +12,16 @@ class AccountService {
       AppState.account = new Account(res.data)
     } catch (err) {
       logger.error('HAVE YOU STARTED YOUR SERVER YET???', err)
+    }
+  }
+
+  async getMyCollaborations(){
+    try {
+      const res = await api.get('account/collaborators')
+      logger.log('🙆 my collabs', res.data)
+      AppState.myCollaborations = res.data.map(collab => new Collaborator(collab))
+    } catch (error) {
+      Pop.error(error)
     }
   }
 }
