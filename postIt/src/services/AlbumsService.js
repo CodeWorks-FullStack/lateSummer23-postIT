@@ -13,7 +13,8 @@ class AlbumsService{
     return album
   }
   async getAlbums(query) {
-    const albums = await dbContext.Albums.find(query).populate('creator')
+    // NOTE the .sort('-createdAt') sorts the results so newest content comes first
+    const albums = await dbContext.Albums.find(query).sort('-createdAt').populate('creator')
     return albums
   }
   async createAlbum(albumBody) {
