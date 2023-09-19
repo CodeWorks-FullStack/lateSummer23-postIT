@@ -16,7 +16,10 @@ class CollaboratorsService{
     return collabs
   }
   async getCollaborationsByAccount(userId) {
-    const collabs = await dbContext.Collaborators.find({accountId: userId}).populate('album')
+    // const collabs = await dbContext.Collaborators.find({accountId: userId}).populate('album')
+    // NOTE this populates the album onto the collaborator THEN the creator and memberCount onto the virtual album.
+    // collab > album > creator & memberCount
+    const collabs = await dbContext.Collaborators.find({accountId: userId}).populate({path: 'album', populate: {path: 'creator memberCount', select: '-email'}})
     return collabs
   }
   async removeCollaborator(collaboratorId, userId) {

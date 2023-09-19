@@ -17,3 +17,10 @@ AlbumsSchema.virtual('creator', {
   ref: 'Account',
   justOne: true
 })
+
+AlbumsSchema.virtual('memberCount', {
+  localField: '_id', //what is here
+  foreignField: 'albumId', // what is on there
+  ref: 'Collaborator', // the other thing, the 'there'
+  count: true // NOTE creates a number for each of the matching documents. (each collab with an albumId that matches this albums _id)
+})
