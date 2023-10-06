@@ -1,3 +1,4 @@
+import { socketProvider } from "../SocketProvider.js"
 import { dbContext } from "../db/DbContext.js"
 import { BadRequest, Forbidden } from "../utils/Errors.js"
 
@@ -8,6 +9,7 @@ class CollaboratorsService{
     const collab = await dbContext.Collaborators.create(collabBody)
     await collab.populate('album')
     await collab.populate('profile', '-email')
+    socketProvider.messageUser(collab.album.creatorId.toString(), 'NEW_COLLABORATOR', collab)
     return collab
   }
 

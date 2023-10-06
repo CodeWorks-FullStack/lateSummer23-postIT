@@ -1,5 +1,8 @@
 <template>
   <div class="container">
+    <section class="row">
+      <button class="btn btn-primary" @click="testSocket">test socket</button>
+    </section>
 
     <section class="row">
       <!-- {{ myCollaborations }} -->
@@ -40,6 +43,7 @@ import { albumsService} from '../services/AlbumsService.js'
 import {AppState} from '../AppState.js'
 import AlbumCard from '../components/AlbumCard.vue';
 import { accountService } from '../services/AccountService.js';
+import { socketService } from '../services/SocketService.js';
 
 export default {
     setup() {
@@ -75,7 +79,10 @@ export default {
                 return AppState.albums.filter(album => album.category == filterBy.value)
               }
             }),
-            myCollaborations: computed(()=> AppState.myCollaborations)
+            myCollaborations: computed(()=> AppState.myCollaborations),
+            testSocket(){
+              socketService.emit('SOCKET_TEST', 'anything 🧛')
+            }
         };
     },
     components: { AlbumCard }

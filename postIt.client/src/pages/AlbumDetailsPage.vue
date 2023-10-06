@@ -57,13 +57,15 @@
 
 <script>
 import { AppState } from '../AppState';
-import { computed, reactive, onMounted, ref, onUpdated, watchEffect } from 'vue';
+import { computed, reactive, onMounted, ref, onUpdated, watchEffect, onBeforeUnmount } from 'vue';
 import Pop from '../utils/Pop.js';
 import { albumsService } from '../services/AlbumsService.js';
 import { useRoute } from 'vue-router';
 import ModalWrapper from '../components/ModalWrapper.vue';
 import PictureForm from '../components/PictureForm.vue';
 import {collaboratorsService} from '../services/CollaboratorsService.js'
+import {socketService} from '../services/SocketService.js'
+import {authSockethandler} from '../handlers/AuthorizedHandler.js'
 export default {
     setup() {
       const inProgress = ref(false)
@@ -72,8 +74,12 @@ export default {
         watchEffect(() => {
             getAlbumById();
             getPicturesByAlbumId();
-            getCollaboratorsByAlbumId()
+            getCollaboratorsByAlbumId();
+            authSockethandler.emit('JOIN_ROOM', `album_${route.params.albumId}`)
         });
+        onBeforeUnmount(()=>{
+          socketService.emit('LEAVE_ROOM', `album_${AppState.activeAlbum.id}`)
+        })
         async function getAlbumById() {
             try {
                 await albumsService.getAlbumById(route.params.albumId);

@@ -1,3 +1,4 @@
+import { socketProvider } from "../SocketProvider.js"
 import { dbContext } from "../db/DbContext.js"
 import { albumsService } from "./AlbumsService.js"
 
@@ -16,6 +17,7 @@ class PicturesService{
   async createPicture(picBody) {
     const picture = await dbContext.Pictures.create(picBody)
     await picture.populate('creator')
+    socketProvider.messageRoom(`album_${picture.albumId}`,'NEW_PICTURE', picture)
     return picture
   }
 

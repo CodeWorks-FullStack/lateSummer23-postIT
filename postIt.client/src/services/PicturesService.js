@@ -10,7 +10,7 @@ class PicturesService{
   async createPicture(pictureData){
     const res = await api.post('api/pictures', pictureData)
     logger.log('added 🖼️', res.data)
-    AppState.activeAlbumPictures.push(new Picture(res.data))
+    // AppState.activeAlbumPictures.push(new Picture(res.data)) ANCHOR handled by sockets now
   }
 
 }

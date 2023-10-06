@@ -1,3 +1,4 @@
+import { socketProvider } from "../SocketProvider.js"
 import { dbContext } from "../db/DbContext.js"
 import { BadRequest, Forbidden } from "../utils/Errors.js"
 
@@ -20,6 +21,7 @@ class AlbumsService{
   async createAlbum(albumBody) {
     const album = await dbContext.Albums.create(albumBody)
     await album.populate('creator memberCount')
+    socketProvider.message('NEW_ALBUM', album) // ANCHOR socket message
     return album
   }
 

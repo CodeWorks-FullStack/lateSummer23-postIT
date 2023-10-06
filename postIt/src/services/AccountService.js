@@ -1,3 +1,4 @@
+import { socketProvider } from '../SocketProvider.js'
 import { dbContext } from '../db/DbContext'
 
 // Private Methods
@@ -60,6 +61,8 @@ class AccountService {
     })
     account = await createAccountIfNeeded(account, user)
     await mergeSubsIfNeeded(account, user)
+
+    // socketProvider.message('USER_LOGGED_IN', account) this is a bad place to do this
     return account
   }
 

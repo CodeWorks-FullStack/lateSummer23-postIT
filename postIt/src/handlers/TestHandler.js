@@ -12,6 +12,6 @@ export class TestHandler extends SocketHandler {
   }
 
   async testEvent(payload) {
-    this.socket.emit('IS_TESTED', payload)
+    this.socket.emit('IS_TESTED', {payload, serverSays: 'boo 👻'})
   }
 }
